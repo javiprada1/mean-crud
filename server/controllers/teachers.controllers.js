@@ -3,8 +3,13 @@ const Teacher = require('../models/teacher');
 const teacherCtrl = {};
 
 teacherCtrl.getTeachers = async (req, res) =>{
-    const teachers = await Teacher.find();
-    res.json(teachers);
+    try{
+        const teachers = await Teacher.find();
+        res.json(teachers);
+    }catch(err){
+        res.json({status:'Teachers not found.'});
+    }
+    
 };
 
 teacherCtrl.createTeacher = async (req, res) =>{
@@ -15,9 +20,14 @@ teacherCtrl.createTeacher = async (req, res) =>{
     });
 };
 
-teacherCtrl.getTeacher = async (req, res) =>{
-    const teacher = await Teacher.findById(req.params.id);
-    res.json(teacher);
+teacherCtrl.getTeacher = (req, res) =>{
+    Teacher.findById(req.params.id)
+        .then(teacher => {
+            res.json(teacher);
+        })
+        .catch(err =>{
+            res.json({status:'Teacher not found. '+err});  
+        });
 }
 
 teacherCtrl.editTeacher = async (req, res) =>{
