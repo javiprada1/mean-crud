@@ -20,7 +20,7 @@ export class TeachersComponent implements OnInit {
   }
 
   addTeacher(form:NgForm){
-
+    console.log(form.value);
     if(form.value._id){
       this.teacherService.editTeacher(form.value)
         .subscribe(res =>{
