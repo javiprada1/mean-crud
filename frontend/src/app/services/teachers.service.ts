@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Teacher } from '../models/teacher';
+import {HttpHeaders} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,15 @@ export class TeachersService {
     this.selectedTeacher = new Teacher();
   }
   getTeachers(){
-    return this.http.get(this.URL_API);
+      const httpOptions = {
+        headers: new HttpHeaders({
+            'Content-Type':'application/json',
+            'Authorization':localStorage.getItem('token')
+        })
+    };
+    return this.http.get(this.URL_API,httpOptions);
+
+ // return this.http.post(this.url + 'users/register', params, httpOptions);
   }
   createTeacher(teacher: Teacher){
     return this.http.post(this.URL_API,teacher);

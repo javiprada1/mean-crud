@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {UserService} from './services/users.service';
 import {User} from './models/user';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
 declare var M: any;
 
@@ -14,18 +15,18 @@ declare var M: any;
 export class AppComponent {
   public title = 'Teachers App';
   public user: User;
+  public user_register: User;
   public identity = null;
   public token = null;
 
-  constructor(private  userService: UserService){
+  constructor(private  userService: UserService, private router: Router){
     this.user = new User('','','','','','ROLE_USER','');
+    this.user_register = new User('','','','','','ROLE_USER','');
   }
 
   ngOnInit(){
     this.identity = this.userService.getIdentity();
     this.token = this.userService.getToken();
-    console.log(this.identity);
-    console.log(this.token);
   }
 
   logout(){
@@ -34,18 +35,16 @@ export class AppComponent {
     localStorage.clear();
     this.identity = null;
     this.token = null;
+    this.router.navigate(['/']);
     M.toast({html:'Logout successfully, thanks for you visit.'});
   }
 
   public onSubmitLogin(form: NgForm){
-
     const params ={
       email: form.value.email,
       password: form.value.password,
       gethash: true
     }
-    if(form.value.gethash){
-    }else{
       //Get datas user
       this.userService.signUp(form.value)
         .subscribe(
@@ -67,9 +66,7 @@ export class AppComponent {
                       M.toast({html:'Error login'});
                     }else{
                       localStorage.setItem('token',token);
-                      console.log(localStorage.getItem('token'))
-                      console.log(localStorage.getItem('identity'))
-
+                      this.user = new User('','','','','','ROLE_USER','');
                     }
                   }, err => {
                     M.toast({html:'Not login'});
@@ -81,8 +78,33 @@ export class AppComponent {
           error =>{
             M.toast({html:'Not login'});
           }
-        )
+        );
+  }
+
+  onSubmitRegister(){
+    
+    const params ={
+      name: this.user_register.name,
+      surname: this.user_register.surname,
+      email: this.user_register.email,
+      password: this.user_register.password,
+      role: 'ROLE_USER',
+      image: ''
     }
 
+    this.userService.register(params).subscribe(
+      response=>{
+        const user = response['user'];
+        this.user_register = user;
+        if(!user._id){
+          M.toast({html:'Not register'});
+        }else{
+          M.toast({html:'User register successfully. You can login use: '+this.user_register.email});
+          this.user_register = new User('','','','','','ROLE_USER','');
+        }
+      },
+      error=>{
+        M.toast({html:'Not register'});}
+      )
   }
 }

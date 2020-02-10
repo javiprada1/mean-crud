@@ -20,11 +20,9 @@ export class TeachersComponent implements OnInit {
   }
 
   addTeacher(form:NgForm){
-    console.log(form.value);
     if(form.value._id){
       this.teacherService.editTeacher(form.value)
         .subscribe(res =>{
-          console.log(res);
           this.resetForm(form);
           M.toast({html:'Teacher updated successfully'});
           this.getTeachers();
@@ -32,7 +30,6 @@ export class TeachersComponent implements OnInit {
     }else{
       this.teacherService.createTeacher(form.value)
       .subscribe( res =>{
-        console.log(res);
         this.resetForm(form);
         M.toast({html:'Teacher save successfully'});
         this.getTeachers();
