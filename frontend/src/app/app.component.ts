@@ -82,7 +82,6 @@ export class AppComponent {
   }
 
   onSubmitRegister(){
-    
     const params ={
       name: this.user_register.name,
       surname: this.user_register.surname,

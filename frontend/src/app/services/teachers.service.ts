@@ -27,12 +27,30 @@ export class TeachersService {
  // return this.http.post(this.url + 'users/register', params, httpOptions);
   }
   createTeacher(teacher: Teacher){
-    return this.http.post(this.URL_API,teacher);
+    const httpOptions = {
+      headers: new HttpHeaders({
+          'Content-Type':'application/json',
+          'Authorization':localStorage.getItem('token')
+      })
+  };
+    return this.http.post(this.URL_API,teacher,httpOptions);
   }
   editTeacher(teacher: Teacher){
-    return this.http.put(this.URL_API+`/${teacher._id}`,teacher);
+      const httpOptions = {
+        headers: new HttpHeaders({
+            'Content-Type':'application/json',
+            'Authorization':localStorage.getItem('token')
+        })
+    };
+    return this.http.put(this.URL_API+`/${teacher._id}`,teacher,httpOptions);
   }
   deleteTeacher(_id: String){
-    return this.http.delete(this.URL_API+`/${_id}`);
+      const httpOptions = {
+        headers: new HttpHeaders({
+            'Content-Type':'application/json',
+            'Authorization':localStorage.getItem('token')
+        })
+    };
+    return this.http.delete(this.URL_API+`/${_id}`, httpOptions);
   }
 }
